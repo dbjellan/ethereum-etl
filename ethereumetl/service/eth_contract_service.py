@@ -32,13 +32,13 @@ class EthContractService:
             evm_code = EvmCode(contract=Contract(bytecode=bytecode), static_analysis=False, dynamic_analysis=False)
             evm_code.disassemble(bytecode)
             basic_blocks = evm_code.basicblocks
-            if basic_blocks and len(basic_blocks) > 0:
-                init_block = basic_blocks[0]
-                instructions = init_block.instructions
-                push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
-                return sorted(list(set('0x' + inst.operand for inst in push4_instructions)))
-            else:
-                return []
+
+            sighashes = set()
+            if basic_blocks:
+                for block in basic_blocks:
+                    push4_instructions = [inst for inst in block.instructions if inst.name == 'PUSH4']
+                    sighashes = sighashes.union(set('0x' + inst.operand for inst in push4_instructions))
+            return sorted(list(sighashes))
         else:
             return []
 
