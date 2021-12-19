@@ -28,4 +28,5 @@ class EthContract(object):
         self.function_sighashes = []
         self.is_erc20 = False
         self.is_erc721 = False
+        self.is_erc1125 = False
         self.block_number = None
